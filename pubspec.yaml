@@ -1,7 +1,7 @@
 name: notepad_forwangtao_writingboard
 description: "为\"汪涛的记事本\"设计的书写板组件"
 version: 0.0.1
-homepage:
+homepage: https://github.com/TaoEngine
 
 environment:
   sdk: ^3.5.0
@@ -10,20 +10,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  tflite_flutter: ^0.11.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter packages.
 flutter:
-
-  # To add assets to your package, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   #
