@@ -43,13 +43,19 @@ class WriteWidget extends StatelessWidget {
   /// 还好Flutter有局部渲染这个非常棒的底层功能
   final Path writingPath;
 
+  /// 书写笔迹的有关设置
+  ///
+  final Paint penProperties;
+
   /// 书写组件
-  const WriteWidget(
-      {super.key,
-      required this.lefttopPosition,
-      required this.rightbottomPosition,
-      required this.writingPath,
-      this.isDebug = false});
+  const WriteWidget({
+    super.key,
+    required this.lefttopPosition,
+    required this.rightbottomPosition,
+    required this.writingPath,
+    required this.penProperties,
+    this.isDebug = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +73,10 @@ class WriteWidget extends StatelessWidget {
           child: CustomPaint(
             size: Size(rightbottomPosition.dx - lefttopPosition.dx,
                 rightbottomPosition.dy - lefttopPosition.dy),
-            painter: _Painter(writepath: writingPathFixed),
+            painter: _Writer(
+                writingPath: writingPathFixed,
+                penKind: PenKind.gelPen,
+                penProperties: penProperties),
             // 让书写组件可以支持更复杂的笔画
             isComplex: true,
             willChange: true,
