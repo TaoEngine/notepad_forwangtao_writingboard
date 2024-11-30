@@ -1,6 +1,12 @@
 part of 'notepad_forwangtao_writingboard.dart';
 
 class _Writer extends CustomPainter {
+  /// 从原始触摸事件获取到手写笔的参数
+  final StylusData stylusData;
+
+  /// 笔的属性
+  final PenProperties penProperties;
+
   /// 在单一的一个书写组件内显示的轨迹
   ///
   /// 在每个widget中，
@@ -12,31 +18,7 @@ class _Writer extends CustomPainter {
   /// 然后原始轨迹还都是保存在数据库中的，
   /// 在这里并没有对它们进行修改，
   /// 所以大可不用担心风格化会破坏原始轨迹的样子
-  Path writingPath;
-
-  /// 笔的类型
-  ///
-  /// 在我的记笔记的过程中，
-  /// 我最常使用的两支笔就是：
-  /// 中性笔和直线笔
-  ///
-  /// 中性笔就是我平时记记东西最常用的笔，
-  /// 然后直线笔就可以用于画波浪线、虚线和直线
-  /// 就非常适合标注一些重点东西
-  ///
-  /// 最后橡皮擦工具是每个书写板标配的东西，
-  /// 因此也可以将笔的类型切换成橡皮擦来清除多余笔迹
-  /// 橡皮擦可设置为针对像素的橡皮擦和针对笔迹的橡皮擦
-  PenKind penKind;
-
-  /// 笔的属性
-  ///
-  /// 可以简单的设计它的粗细、大小及颜色，
-  /// 也可以对笔的逻辑进行更深层次的更改
-  ///
-  /// tip:这个文章讲这个Paint属性讲的非常nice，
-  /// 推荐给你们：https://www.cnblogs.com/ilgnefz/p/15992967.html
-  Paint penProperties;
+  final Path writingPath;
 
   /// 测试用画板，主要用于测试书写的笔迹进行还原的算法
   ///
@@ -67,19 +49,27 @@ class _Writer extends CustomPainter {
   ///   通过离转折点的远近来调整圆的偏心度，最后填充一下轮廓即可。
   ///   结果我在网上找资料的时候发现早有人这么做了，还有更好大佬研制出的优化版呢！
   ///   那我得好好的学一下哈
-  _Writer(
-      {required this.writingPath,
-      required this.penKind,
-      required this.penProperties});
+  _Writer({
+    required this.stylusData,
+    required this.penProperties,
+    required this.writingPath,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    penProperties.style = PaintingStyle.stroke;
+    Paint pen = Paint();
+
+    // 每处笔迹需要断开
+    pen.style = PaintingStyle.stroke;
     // 笔迹整体呈圆滑型
-    penProperties.strokeCap = StrokeCap.round;
+    pen.strokeCap = StrokeCap.round;
     // 笔迹的路径呈圆滑型
-    penProperties.strokeJoin = StrokeJoin.round;
-    canvas.drawPath(writingPath, penProperties);
+    pen.strokeJoin = StrokeJoin.round;
+    // 设置颜色和粗细
+    pen.color = penProperties.penColor;
+    pen.strokeWidth = penProperties.penSize;
+
+    canvas.drawPath(writingPath, pen);
   }
 
   @override
@@ -89,22 +79,91 @@ class _Writer extends CustomPainter {
   bool shouldRebuildSemantics(_Writer oldDelegate) => false;
 }
 
-/// 笔的类型
-enum PenKind {
-  /// 中性笔
+/// 笔的属性
+///
+/// 在书写板建立之前将一些要用到的笔引入书写板，
+/// 这些笔就会出现在书写板的笔盘上
+/// 笔的设置根据大家写字的舒适度来调
+///
+/// 让我们将非常好的笔们带给大家！（华为何刚音）
+class PenProperties {
+  /// 笔的颜色
   ///
-  /// 我生活中最常用的笔，写字看着最舒服
-  gelPen,
+  /// 这个真没多少好说的🤓☝️，
+  /// 真的就是调整笔的颜色
+  final Color penColor;
 
-  /// 直线笔
+  /// 笔的粗细
   ///
-  /// 适合用来标注东西的笔，
-  /// 可以切换成波浪线、虚线、双横线和单横线
-  linePen,
+  /// 调整笔的粗细在那个范围间变化
+  ///
+  /// 粗细会随着压感、速度和角度出现或大或小的变化，
+  /// 一般来说，
+  /// 粗细难变化的笔被称为“硬笔”，
+  /// 而容易变化的笔被称为“软笔”
+  final double penSize;
 
-  /// 像素橡皮擦
-  pixelEraser,
+  /// 压感权重
+  ///
+  /// 在书写时，
+  /// 压感决定笔迹粗细的重要程度，
+  /// 范围在0到1之间
+  ///
+  /// 调大的话笔会发软，调小的话笔会发硬
+  final double penPressureWeight;
 
-  /// 笔迹橡皮擦
-  pathEraser
+  /// 中性笔预设
+  ///
+  /// 手感稍硬，不过观感舒服
+  PenProperties.gelpen({
+    this.penColor = Colors.black,
+    this.penSize = 5,
+    this.penPressureWeight = 0.1,
+  });
+
+  /// 水彩笔预设
+  ///
+  /// 手感稍软，不过还没软到毛笔的程度
+  PenProperties.watercolorpen({
+    this.penColor = Colors.red,
+    this.penSize = 5,
+    this.penPressureWeight = 0.8,
+  });
+
+  /// 自定义笔
+  ///
+  /// 可以设置笔的颜色，粗细，还有压感
+  PenProperties(
+    this.penColor,
+    this.penSize,
+    this.penPressureWeight,
+  );
+}
+
+/// 获取到的手写笔参数
+///
+/// 一般来说，手写笔有这几个参数值得我们关注
+/// - 笔的压感
+/// - 笔的转向（在屏幕的相对方向上）
+/// - 笔的倾斜程度
+/// - 笔尖在屏幕按压出的面积（可能在一些设备上没有）
+class StylusData {
+  /// 手写笔的压感
+  final double stylusPressure;
+
+  /// 手写笔的转向
+  final double stylusDirection;
+
+  /// 手写笔的倾斜程度
+  final double stylusTilt;
+
+  /// 手写笔的按压面积
+  final double? stylusRadius;
+
+  StylusData(
+    this.stylusPressure,
+    this.stylusDirection,
+    this.stylusTilt,
+    this.stylusRadius,
+  );
 }

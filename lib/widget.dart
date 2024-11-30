@@ -2,14 +2,6 @@ part of 'notepad_forwangtao_writingboard.dart';
 
 class WriteWidget extends StatelessWidget {
   /// 书写组件是否处于调试状态
-  ///
-  /// 如果处于调试状态的话，
-  /// 会在每个组件上显示一个框框用于展示它的大小和中心点
-  /// 并会在旁边显示组件书写时的刷新率、压感、速度和握笔方向
-  ///
-  /// <!--
-  /// TODO 还未实现显示刷新率、压感、速度和握笔方向的功能
-  /// -->
   final bool isDebug;
 
   /// 书写组件左上角的坐标
@@ -45,7 +37,15 @@ class WriteWidget extends StatelessWidget {
 
   /// 书写笔迹的有关设置
   ///
-  final Paint penProperties;
+  /// 可以简单的设计它的粗细、大小及颜色，
+  /// 也可以对笔的逻辑进行更深层次的更改
+  ///
+  /// tip:这个文章讲这个Paint属性讲的非常nice，
+  /// 推荐给你们：https://www.cnblogs.com/ilgnefz/p/15992967.html
+  final PenProperties penProperties;
+
+  /// 从原始触摸事件获取到手写笔的参数
+  final StylusData stylusData;
 
   /// 书写组件
   const WriteWidget({
@@ -53,6 +53,7 @@ class WriteWidget extends StatelessWidget {
     required this.lefttopPosition,
     required this.rightbottomPosition,
     required this.writingPath,
+    required this.stylusData,
     required this.penProperties,
     this.isDebug = false,
   });
@@ -75,8 +76,8 @@ class WriteWidget extends StatelessWidget {
                 rightbottomPosition.dy - lefttopPosition.dy),
             painter: _Writer(
                 writingPath: writingPathFixed,
-                penKind: PenKind.gelPen,
-                penProperties: penProperties),
+                penProperties: penProperties,
+                stylusData: stylusData),
             // 让书写组件可以支持更复杂的笔画
             isComplex: true,
             willChange: true,
