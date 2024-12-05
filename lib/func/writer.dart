@@ -1,11 +1,11 @@
-part of 'notepad_forwangtao_writingboard.dart';
+part of '../notepad_forwangtao_writingboard.dart';
 
 class _Writer extends CustomPainter {
   /// 从原始触摸事件获取到手写笔的参数
-  final StylusData stylusData;
+  final PointData pointData;
 
   /// 笔的属性
-  final PenProperties penProperties;
+  final PenPreset penPreset;
 
   /// 在单一的一个书写组件内显示的轨迹
   ///
@@ -50,8 +50,8 @@ class _Writer extends CustomPainter {
   ///   结果我在网上找资料的时候发现早有人这么做了，还有更好大佬研制出的优化版呢！
   ///   那我得好好的学一下哈
   _Writer({
-    required this.stylusData,
-    required this.penProperties,
+    required this.pointData,
+    required this.penPreset,
     required this.writingPath,
   });
 
@@ -66,8 +66,8 @@ class _Writer extends CustomPainter {
     // 笔迹的路径呈圆滑型
     pen.strokeJoin = StrokeJoin.round;
     // 设置颜色和粗细
-    pen.color = penProperties.penColor;
-    pen.strokeWidth = penProperties.penSize;
+    pen.color = penPreset.penColor;
+    pen.strokeWidth = penPreset.penSize;
 
     canvas.drawPath(writingPath, pen);
   }
@@ -77,93 +77,4 @@ class _Writer extends CustomPainter {
 
   @override
   bool shouldRebuildSemantics(_Writer oldDelegate) => false;
-}
-
-/// 笔的属性
-///
-/// 在书写板建立之前将一些要用到的笔引入书写板，
-/// 这些笔就会出现在书写板的笔盘上
-/// 笔的设置根据大家写字的舒适度来调
-///
-/// 让我们将非常好的笔们带给大家！（华为何刚音）
-class PenProperties {
-  /// 笔的颜色
-  ///
-  /// 这个真没多少好说的🤓☝️，
-  /// 真的就是调整笔的颜色
-  final Color penColor;
-
-  /// 笔的粗细
-  ///
-  /// 调整笔的粗细在那个范围间变化
-  ///
-  /// 粗细会随着压感、速度和角度出现或大或小的变化，
-  /// 一般来说，
-  /// 粗细难变化的笔被称为“硬笔”，
-  /// 而容易变化的笔被称为“软笔”
-  final double penSize;
-
-  /// 压感权重
-  ///
-  /// 在书写时，
-  /// 压感决定笔迹粗细的重要程度，
-  /// 范围在0到1之间
-  ///
-  /// 调大的话笔会发软，调小的话笔会发硬
-  final double penPressureWeight;
-
-  /// 中性笔预设
-  ///
-  /// 手感稍硬，不过观感舒服
-  PenProperties.gelpen({
-    this.penColor = Colors.black,
-    this.penSize = 5,
-    this.penPressureWeight = 0.1,
-  });
-
-  /// 水彩笔预设
-  ///
-  /// 手感稍软，不过还没软到毛笔的程度
-  PenProperties.watercolorpen({
-    this.penColor = Colors.red,
-    this.penSize = 5,
-    this.penPressureWeight = 0.8,
-  });
-
-  /// 自定义笔
-  ///
-  /// 可以设置笔的颜色，粗细，还有压感
-  PenProperties(
-    this.penColor,
-    this.penSize,
-    this.penPressureWeight,
-  );
-}
-
-/// 获取到的手写笔参数
-///
-/// 一般来说，手写笔有这几个参数值得我们关注
-/// - 笔的压感
-/// - 笔的转向（在屏幕的相对方向上）
-/// - 笔的倾斜程度
-/// - 笔尖在屏幕按压出的面积（可能在一些设备上没有）
-class StylusData {
-  /// 手写笔的压感
-  final double stylusPressure;
-
-  /// 手写笔的转向
-  final double stylusDirection;
-
-  /// 手写笔的倾斜程度
-  final double stylusTilt;
-
-  /// 手写笔的按压面积
-  final double? stylusRadius;
-
-  StylusData(
-    this.stylusPressure,
-    this.stylusDirection,
-    this.stylusTilt,
-    this.stylusRadius,
-  );
 }

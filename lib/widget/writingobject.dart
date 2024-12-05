@@ -1,6 +1,6 @@
-part of 'notepad_forwangtao_writingboard.dart';
+part of '../notepad_forwangtao_writingboard.dart';
 
-class WriteWidget extends StatelessWidget {
+class WritingObject extends StatelessWidget {
   /// 书写组件是否处于调试状态
   final bool isDebug;
 
@@ -42,20 +42,18 @@ class WriteWidget extends StatelessWidget {
   ///
   /// tip:这个文章讲这个Paint属性讲的非常nice，
   /// 推荐给你们：https://www.cnblogs.com/ilgnefz/p/15992967.html
-  final PenProperties penProperties;
+  final PenPreset penPreset;
 
   /// 从原始触摸事件获取到手写笔的参数
-  final StylusData stylusData;
-
-  /// 书写组件
-  const WriteWidget({
+  final PointData pointData;
+  const WritingObject({
     super.key,
+    required this.isDebug,
     required this.lefttopPosition,
     required this.rightbottomPosition,
     required this.writingPath,
-    required this.stylusData,
-    required this.penProperties,
-    this.isDebug = false,
+    required this.penPreset,
+    required this.pointData,
   });
 
   @override
@@ -75,9 +73,10 @@ class WriteWidget extends StatelessWidget {
             size: Size(rightbottomPosition.dx - lefttopPosition.dx,
                 rightbottomPosition.dy - lefttopPosition.dy),
             painter: _Writer(
-                writingPath: writingPathFixed,
-                penProperties: penProperties,
-                stylusData: stylusData),
+              writingPath: writingPathFixed,
+              penPreset: penPreset,
+              pointData: pointData,
+            ),
             // 让书写组件可以支持更复杂的笔画
             isComplex: true,
             willChange: true,

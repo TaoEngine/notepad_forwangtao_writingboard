@@ -1,4 +1,4 @@
-part of 'notepad_forwangtao_writingboard.dart';
+part of '../notepad_forwangtao_writingboard.dart';
 
 enum ShadingStyle {
   /// 横线
