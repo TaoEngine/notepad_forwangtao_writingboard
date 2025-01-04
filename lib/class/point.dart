@@ -1,4 +1,4 @@
-part of '../notepad_forwangtao_writingboard.dart';
+part of '../main.dart';
 
 /// ### 书写时落笔点的参数
 ///
@@ -18,36 +18,60 @@ part of '../notepad_forwangtao_writingboard.dart';
 ///
 /// 说实话Flutter其实是有定义类似的参数 `PointerData` ,
 /// 但是那个参数太繁杂了我说实话，
-/// 还有一些可能永远用不到的功能，
+/// 还有一些可能在手写操作时永远用不到的功能，
 /// 所以我将其精简了下以适合完备的书写采集
 ///
 /// 对了，
-/// 这些采集的 `PointData` 也会被渲染到书写板上以优化过的笔迹形式出现在各位的屏幕上，
-/// 不过这些数据对于渲染来说压力可能还是大了些，
-/// 因此原始记录的笔迹会经过样条插值和风格化的优化变得平滑且好看
+/// 这些采集的 `PointData` 也会被渲染到书写板上以优化过的笔迹形式出现在各位的屏幕上,
+/// 不过这些数据对于渲染来说压力可能还是大了些,
+/// 因此原始记录的笔迹会经过样条插值以减少数据量,
+/// 且经过风格化的优化后笔迹会变得平滑且好看
 class PointData {
-  /// 此次落笔点的编号，用于识别多指触控所用
+  /// ### 此次落笔点的编号
+  ///
+  /// #### 介绍:
+  ///
+  /// 由于Listener在每次触摸事件发生时会 **根据触摸设备以及次序给每个触摸点** 标注一个 **不会再复用** 的ID,
+  /// 这样就有了原生的多指触控支持( `GestureDetector` 里面的多指事件).
+  ///
+  /// 在这里编号将用于分类落笔设备,并且为识别多指触控所用
   final int thisPointNum;
 
-  /// 此次落笔点的坐标
+  /// ### 此次落笔点的坐标
   final Offset thisPointOffset;
 
-  /// 此次落笔点与上一个落笔点相隔的时间
+  /// ### 此次落笔点与上一个落笔点相隔的时间
   final int thisPointTime;
 
-  /// 此次落笔点采集出来书写设备(特指手写笔)的压感
+  /// ### 此次落笔点采集出来书写设备(特指手写笔)的压感
+  ///
+  /// #### tip:
+  ///
+  /// 要是此次触摸事件不是触控笔做出的,这个值就没有了( `null` )
   final double? thisPointPressure;
 
-  /// 此次落笔点采集出来书写设备(特指手写笔)的转向
+  /// ### 此次落笔点采集出来书写设备(特指手写笔)的转向
+  ///
+  /// #### tip:
+  ///
+  /// 要是此次触摸事件不是触控笔做出的,这个值就没有了( `null` )
   final double? thisPointRotation;
 
-  /// 此次落笔点采集出来书写设备(特指手写笔)的倾斜程度
+  /// ### 此次落笔点采集出来书写设备(特指手写笔)的倾斜程度
+  ///
+  /// #### tip:
+  ///
+  /// 要是此次触摸事件不是触控笔做出的,这个值就没有了( `null` )
   final double? thisPointTilt;
 
-  /// 此次落笔点采集出来书写设备(特指手写笔)的按压面积
+  /// ### 此次落笔点采集出来书写设备(特指手写笔)的按压面积
+  ///
+  /// #### tip:
+  ///
+  /// 要是此次触摸事件不是触控笔做出的,这个值就没有了( `null` )
   final double? thisPointRadius;
 
-  /// 进行一次书写时落笔的点的所有参数
+  /// ### 进行一次书写时落笔的点的所有参数
   ///
   /// 需要将从 `Listener` 或者 `PencilKit` 中采集到的落笔点的所有信息导入此处，
   /// 这不仅是将要保存的记事本主要信息，对笔迹风格化非常有用
@@ -61,7 +85,7 @@ class PointData {
     this.thisPointRadius,
   });
 
-  /// 从Listener的 [PointerEvent] 采集落笔点参数
+  /// ### 一键从Listener的 [PointerEvent] 采集落笔点参数
   static PointData importPointData(PointerEvent event) {
     PointData thisPoint = PointData(
       thisPointNum: event.device,

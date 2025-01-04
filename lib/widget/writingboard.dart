@@ -1,25 +1,65 @@
-part of '../notepad_forwangtao_writingboard.dart';
+import 'dart:ui';
 
-class _WritingBoardCore extends StatefulWidget {
-  final bool isDebug;
-  final Offset appSafeAreaFix;
-  final AllowTouch allowTouch;
-  final WriteReadMode modeWriteRead;
-  final WritingObjectManager writingObjectManager;
+import 'package:flutter/material.dart';
 
-  const _WritingBoardCore({
-    required this.isDebug,
-    required this.allowTouch,
-    required this.modeWriteRead,
-    required this.appSafeAreaFix,
-    required this.writingObjectManager,
+import 'package:notepad_forwangtao_writingboard/widget/boardcontroller.dart';
+
+/// ### 书写板Widget
+///
+/// #### 介绍
+///
+/// {@template Writingboard.介绍}
+///
+/// 这便是整个书写板组件的交互Widget了,
+/// 你只管往上面写字就好了,
+/// 它自带许多帮助写字的超酷功能
+///
+/// {@endtemplate}
+///
+/// #### 使用
+///
+/// {@template Writingboard.使用}
+///
+/// 比如我想全屏幕显示这个书写板,
+/// 那就这样写:
+/// ```dart
+/// return Center(
+///   child: Writingboard(),
+/// );
+/// ```
+///
+/// 但是你要是不满足这个只能写字的书写板,
+/// 那你还能对这个组件作以下这些自定义功能,
+/// 让它更贴合你的需求:
+/// ```dart
+/// Writingboard(
+///   controller: WritingboardController,
+///   canscroll: true/false,
+///   debug: true/false,
+/// )
+/// ```
+///
+/// {@endtemplate}
+///
+/// #### 功能
+///
+/// * 书写板控制器 \
+/// {@macro WritingboardController.介绍}
+class Writingboard extends StatefulWidget {
+  /// {@macro WritingboardController.介绍}
+  final WritingboardController controller;
+
+  /// {@macro Writingboard.介绍}
+  const Writingboard({
+    super.key,
+    required this.controller,
   });
 
   @override
-  State<_WritingBoardCore> createState() => _WritingBoardCoreState();
+  State<Writingboard> createState() => _WritingboardState();
 }
 
-class _WritingBoardCoreState extends State<_WritingBoardCore> {
+class _WritingboardState extends State<Writingboard> {
   /// 用来监听ListView翻页事件用的控制器
   final ScrollController _scrollController = ScrollController();
 
@@ -51,17 +91,20 @@ class _WritingBoardCoreState extends State<_WritingBoardCore> {
   @override
   void initState() {
     super.initState();
+    widget.controller.addListener(() {});
     // ListView发生了变动就会刷新当前位置
     _scrollController.addListener(() {
       listviewNowPosition = _scrollController.position.pixels;
     });
     // 预设值是阅读模式还是书写模式
-    isScrollable =
-        widget.modeWriteRead == WriteReadMode.readMode ? true : false;
+    isScrollable = widget.controller.writereadmode == WriteReadMode.readMode
+        ? true
+        : false;
   }
 
   @override
   void dispose() {
+    widget.controller.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -78,13 +121,14 @@ class _WritingBoardCoreState extends State<_WritingBoardCore> {
         SizedBox(
           height: 2000, // TODO 正在重新做无限向下功能
           child: Listener(
-              behavior: HitTestBehavior.translucent,
-              onPointerDown: (event) => onPointerDown(event),
-              onPointerMove: (event) => onPointerMove(event),
-              onPointerUp: (event) => onPointerUp(event),
-              child: Stack(
-                children: widget.writingObjectManager.writingObjects,
-              )),
+            behavior: HitTestBehavior.translucent,
+            onPointerDown: (event) => onPointerDown(event),
+            onPointerMove: (event) => onPointerMove(event),
+            onPointerUp: (event) => onPointerUp(event),
+            child: Stack(
+              children: widget.writingObjectManager.writingObjects,
+            ),
+          ),
         )
       ],
     );

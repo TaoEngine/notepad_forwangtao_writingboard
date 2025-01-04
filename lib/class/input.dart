@@ -1,4 +1,4 @@
-part of '../notepad_forwangtao_writingboard.dart';
+import 'package:flutter/material.dart';
 
 /// ### 笔的预设
 ///

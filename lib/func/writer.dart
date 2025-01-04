@@ -1,4 +1,4 @@
-part of '../notepad_forwangtao_writingboard.dart';
+part of '../main.dart';
 
 class _Writer extends CustomPainter {
   /// 从原始触摸事件获取到手写笔的参数

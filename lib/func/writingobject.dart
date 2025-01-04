@@ -1,4 +1,4 @@
-part of '../notepad_forwangtao_writingboard.dart';
+part of '../main.dart';
 
 class WritingObject extends StatelessWidget {
   /// 书写组件是否处于调试状态
