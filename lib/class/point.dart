@@ -1,4 +1,4 @@
-part of '../main.dart';
+import 'package:flutter/widgets.dart';
 
 /// ### 书写时落笔点的参数
 ///

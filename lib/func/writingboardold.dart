@@ -1,28 +1,8 @@
-part of '../main.dart';
+import 'package:flutter/material.dart';
+import 'package:notepad_forwangtao_writingboard/class/point.dart';
+import 'package:notepad_forwangtao_writingboard/notepad_forwangtao_writingboard.dart';
 
 class WritingObjectManager {
-  WritingObjectManager._privateConstructor();
-
-  static final WritingObjectManager _instance =
-      WritingObjectManager._privateConstructor();
-
-  /// 书写板控制管理器
-  factory WritingObjectManager() {
-    return _instance;
-  }
-
-  /// 书写板是否处于Debug模式，这会在书写板显示一些用于调试的组件
-  bool isDebug = false;
-
-  /// 笔盒，存放到时候书写时要用到的笔
-  List<PenPreset> penPresets = [];
-
-  /// 使用笔盒的哪一只笔写字
-  int penNum = 0;
-
-  /// 在这里存放要用于渲染的书写笔迹组件
-  List<WritingObject> writingObjects = [];
-
   /*
    * 这些是用于每一次书写使用的临时变量
    * 非必须不要从外部调用它们
@@ -142,4 +122,46 @@ class WritingObjectManager {
       return false;
     }
   }
+}
+
+class WritingFunction {
+  WritingboardController controller;
+
+  /// 每一次书写都将操作这里的轨迹进行书写，
+  /// 再给各个渲染字迹组件进行渲染
+  Path _writingPath = Path();
+
+  /// 每个书写笔迹组件的临时坐标(左上角)
+  Offset _lefttopPosition = Offset.zero;
+
+  /// 每个书写笔迹组件的临时坐标(右下角)
+  Offset _rightbottomPosition = Offset.zero;
+
+  ///
+  WritingFunction({required this.controller});
+
+  ///
+  void _writeBegin({required PointData thisPoint}) {
+    _writingPath.moveTo(
+      thisPoint.thisPointOffset.dx,
+      thisPoint.thisPointOffset.dy,
+    );
+    _lefttopPosition = thisPoint.thisPointOffset;
+    _rightbottomPosition = thisPoint.thisPointOffset;
+  }
+
+  ///
+  void _writeMove({required PointData thisPoint}) {}
+
+  ///
+  void _writeEnd({required PointData thisPoint}) {}
+
+  /// 落笔事件
+  void onPointerDown(PointerEvent event) {}
+
+  /// 笔迹移动事件
+  void onPointerMove(PointerEvent event) {}
+
+  /// 收笔事件
+  void onPointerUp(PointerEvent event) {}
 }

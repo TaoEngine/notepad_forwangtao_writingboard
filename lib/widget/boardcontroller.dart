@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:notepad_forwangtao_writingboard/func/writingobject.dart';
 
 /// ### 书写板控制器
 ///
@@ -60,6 +61,12 @@ class WritingboardController extends ChangeNotifier {
   /// {@macro WritingboardController.WriteReadMode.介绍}
   WriteReadMode get writereadmode => _writereadmode;
 
+  /// ### 存放笔迹的列表
+  List<WritingObject> get writingObjects => _writingObjects;
+
+  /// ### 存放重做笔迹的列表
+  List<WritingObject> get redoObjects => _redoObjects;
+
   /// {@macro WritingboardController.isdebug.介绍}
   bool _isdebug = false;
 
@@ -68,6 +75,12 @@ class WritingboardController extends ChangeNotifier {
 
   /// {@macro WritingboardController.WriteReadMode.介绍}
   WriteReadMode _writereadmode = WriteReadMode.readMode;
+
+  ///
+  final List<WritingObject> _writingObjects = [];
+
+  ///
+  final List<WritingObject> _redoObjects = [];
 
   /// 设置调试模式
   void setDebug({required bool value}) {
@@ -85,6 +98,23 @@ class WritingboardController extends ChangeNotifier {
   void setWriteReadMode({required WriteReadMode value}) {
     _writereadmode = value;
     notifyListeners();
+  }
+
+  /// 撤销功能
+  void clickUndo() {
+    if (_writingObjects.isNotEmpty) {
+      _redoObjects.add(_writingObjects.last);
+      _writingObjects.removeLast();
+    }
+    notifyListeners();
+  }
+
+  /// 重做功能
+  void clickRedo() {
+    if (_redoObjects.isNotEmpty) {
+      writingObjects.add(_redoObjects.last);
+      _redoObjects.removeLast();
+    }
   }
 }
 

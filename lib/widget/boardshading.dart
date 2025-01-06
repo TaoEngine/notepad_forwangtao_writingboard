@@ -1,4 +1,4 @@
-part of '../main.dart';
+import 'package:flutter/widgets.dart';
 
 enum ShadingStyle {
   /// 横线
@@ -49,7 +49,8 @@ class Shading extends StatelessWidget {
   Widget build(BuildContext context) {
     // 应用的莫奈取色调用一下，
     // 这样绘线的时候就不用担心深色模式和浅色模式的问题了
-    Color lineColor = Theme.of(context).colorScheme.onSurface;
+    // Color lineColor = Theme.of(context).colorScheme.onSurface;
+    Color lineColor = const Color.fromARGB(0, 255, 255, 255);
 
     return Container(
       padding: shadingPadding,

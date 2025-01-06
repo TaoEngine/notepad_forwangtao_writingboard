@@ -1,6 +1,6 @@
-part of '../main.dart';
+part of 'writingobject.dart';
 
-class _Writer extends CustomPainter {
+class Writer extends CustomPainter {
   /// 从原始触摸事件获取到手写笔的参数
   final PointData pointData;
 
@@ -49,7 +49,7 @@ class _Writer extends CustomPainter {
   ///   通过离转折点的远近来调整圆的偏心度，最后填充一下轮廓即可。
   ///   结果我在网上找资料的时候发现早有人这么做了，还有更好大佬研制出的优化版呢！
   ///   那我得好好的学一下哈
-  _Writer({
+  Writer({
     required this.pointData,
     required this.penPreset,
     required this.writingPath,
@@ -73,8 +73,8 @@ class _Writer extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_Writer oldDelegate) => true;
+  bool shouldRepaint(Writer oldDelegate) => true;
 
   @override
-  bool shouldRebuildSemantics(_Writer oldDelegate) => false;
+  bool shouldRebuildSemantics(Writer oldDelegate) => false;
 }

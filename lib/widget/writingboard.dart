@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:notepad_forwangtao_writingboard/class/point.dart';
 
 import 'package:notepad_forwangtao_writingboard/widget/boardcontroller.dart';
 
@@ -43,7 +44,6 @@ import 'package:notepad_forwangtao_writingboard/widget/boardcontroller.dart';
 ///
 /// #### 功能
 ///
-/// * 书写板控制器 \
 /// {@macro WritingboardController.介绍}
 class Writingboard extends StatefulWidget {
   /// {@macro WritingboardController.介绍}
@@ -126,7 +126,7 @@ class _WritingboardState extends State<Writingboard> {
             onPointerMove: (event) => onPointerMove(event),
             onPointerUp: (event) => onPointerUp(event),
             child: Stack(
-              children: widget.writingObjectManager.writingObjects,
+              children: widget.controller.writingObjects,
             ),
           ),
         )
@@ -140,7 +140,7 @@ class _WritingboardState extends State<Writingboard> {
     // 通过Listener记录一下当前落笔点
     PointData thisPoint = PointData.importPointData(event);
 
-    switch (widget.modeWriteRead) {
+    switch (widget.controller.writereadmode) {
       // 书写模式
       case WriteReadMode.writeMode:
         switch (widget.allowTouch) {

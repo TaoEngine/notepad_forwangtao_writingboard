@@ -1,4 +1,8 @@
-part of '../main.dart';
+import 'package:flutter/widgets.dart';
+import 'package:notepad_forwangtao_writingboard/class/input.dart';
+import 'package:notepad_forwangtao_writingboard/class/point.dart';
+
+part './writer.dart';
 
 class WritingObject extends StatelessWidget {
   /// 书写组件是否处于调试状态
@@ -72,7 +76,7 @@ class WritingObject extends StatelessWidget {
           child: CustomPaint(
             size: Size(rightbottomPosition.dx - lefttopPosition.dx,
                 rightbottomPosition.dy - lefttopPosition.dy),
-            painter: _Writer(
+            painter: Writer(
               writingPath: writingPathFixed,
               penPreset: penPreset,
               pointData: pointData,

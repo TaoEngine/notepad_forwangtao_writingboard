@@ -25,5 +25,5 @@
 /// #### 目前实现功能
 library notepad_forwangtao_writingboard;
 
-export './widget/writingboard.dart';
-export './widget/boardcontroller.dart';
+export 'widget/writingboardnew.dart';
+export 'widget/boardcontroller.dart';
